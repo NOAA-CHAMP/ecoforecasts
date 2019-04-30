@@ -1,0 +1,26 @@
+function ranges = range_from_stddevs(vals, mean, sd, incs)
+%FUNCTION ranges = range_from_stddevs(vals, mean, sd, incs)
+%
+% Calculate seasonal ranges based on mean and multiples of standard deviation.
+
+    % If caller did not give us s.d. multiples, make up a good set...
+    if ( nargin < 4 )
+      incs = [ ...
+          -Inf, ...
+          [-6:-3] * 0.25, ...
+          -0.5, ...
+          0.5, ...
+          [3:6] * 0.25, ...
+          +Inf ...
+      ];
+    end
+
+    ranges = mean + (incs * sd);
+
+    % Make sure we didn't go off into nonexistent value ranges!
+    for idx = 2:11
+      ranges(idx) = max(ranges(idx), min(vals));
+      ranges(idx) = min(ranges(idx), max(vals));
+    end
+
+return;
